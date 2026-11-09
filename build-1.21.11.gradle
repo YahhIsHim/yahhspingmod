@@ -1,0 +1,41 @@
+// Minecraft 1.21.11 (obfuscated, remapped to Mojang names). Gradle itself still needs JDK 25 (Loom 1.18),
+// but the mod is compiled for Java 21, which is what 1.21.11 runs on.
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+}
+
+def mc = '1.21.11'
+
+base.archivesName = 'yahhs-ping-mod'
+version = "${project.mod_version}+mc${mc}"
+
+sourceSets {
+	main {
+		java.srcDir 'src/compat/a/java'
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${mc}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.property('fabric_api_' + mc)}"
+}
+
+processResources {
+	def props = [version: project.version, mc_range: '1.21.11', java_range: '>=21']
+	inputs.properties props
+
+	filesMatching('fabric.mod.json') {
+		expand props
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}

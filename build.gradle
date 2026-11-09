@@ -1,0 +1,45 @@
+// Minecraft 26.x (unobfuscated, Mojang names) - needs JDK 25.
+// Used for 26.1, 26.2 and 26.3 (pick with -Pmc=26.x). The 1.21.11 build uses build-1.21.11.gradle.
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+def mc = project.property('mc')
+
+// 26.1 / 26.2 share one set of version-specific code (compat/b); 26.3 changed keybinds to SDL (compat/c).
+def compat = (mc == '26.3') ? 'c' : 'b'
+// Which Minecraft versions the jar declares it works on.
+def mcRange = (mc == '26.3') ? '>=26.3' : "~${mc}"
+
+base.archivesName = 'yahhs-ping-mod'
+version = "${project.mod_version}+mc${mc}"
+
+sourceSets {
+	main {
+		java.srcDir "src/compat/${compat}/java"
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${mc}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.property('fabric_api_' + mc)}"
+}
+
+processResources {
+	def props = [version: project.version, mc_range: mcRange, java_range: '>=25']
+	inputs.properties props
+
+	filesMatching('fabric.mod.json') {
+		expand props
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}

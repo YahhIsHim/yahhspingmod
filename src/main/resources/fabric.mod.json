@@ -1,0 +1,19 @@
+{
+	"schemaVersion": 1,
+	"id": "yahhsping",
+	"version": "${version}",
+	"name": "Yahh's Ping Mod",
+	"description": "Look at a block or player and press a key to ping it to your trusted teammates.",
+	"authors": ["Yahh"],
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["com.yahhsping.YahhsPingMod"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "${mc_range}",
+		"java": "${java_range}",
+		"fabric-api": "*"
+	}
+}

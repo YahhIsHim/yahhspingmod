@@ -1,0 +1,16 @@
+pluginManagement {
+	repositories {
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+rootProject.name = 'yahhs-ping-mod'
+
+// Pick the build script for the Minecraft version being built:  ./gradlew -Pmc=1.21.11 build
+def mc = providers.gradleProperty('mc').getOrElse('26.3')
+rootProject.buildFileName = (mc == '1.21.11') ? 'build-1.21.11.gradle' : 'build.gradle'
