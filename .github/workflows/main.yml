@@ -1,0 +1,23 @@
+name: Build mod
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mc: ['1.21.11', '26.1', '26.2', '26.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - run: chmod +x gradlew && ./gradlew -Pmc=${{ matrix.mc }} build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: yahhs-ping-mod-${{ matrix.mc }}
+          path: build/libs/*.jar
